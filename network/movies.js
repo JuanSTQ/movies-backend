@@ -1,8 +1,10 @@
-
 const express = require('express');
 const Movies = require('../services/movies');
+const validationData = require('../utils/middlewares/validationData');
+const { schemaIdMovie, schemaMovie, updateMovieSchema } = require('../utils/Schemas/movies');
 const router = express.Router();
 const moviesService = new Movies()
+
 
 router.get('/', (req,res,next)=>{
   moviesService.getMovies(req.query)
@@ -13,7 +15,7 @@ router.get('/', (req,res,next)=>{
     next(error)
   })
 })
-router.get('/:id', (req,res,next)=>{
+router.get('/:id', validationData(schemaIdMovie, "params"), (req,res,next)=>{
   const {id} = req.params
   moviesService.getMovie({id})
   .then(movie=>{
@@ -23,7 +25,7 @@ router.get('/:id', (req,res,next)=>{
     next(error)
   })
 })
-router.post('/', (req,res,next)=>{
+router.post('/', validationData(schemaMovie), (req,res,next)=>{
   const {body:movie} = req
   moviesService.createMovie({movie})
   .then(id=>{
@@ -34,7 +36,7 @@ router.post('/', (req,res,next)=>{
   })
 })
 
-router.delete('/:id', (req,res,next)=>{
+router.delete('/:id', validationData(schemaIdMovie, "params"), (req,res,next)=>{
   moviesService.deleteMovie(req.params)
   .then(id=>{
     res.status(200).json({
@@ -47,44 +49,21 @@ router.delete('/:id', (req,res,next)=>{
   })
 })
 
-router.put('/:id', (req,res,next)=>{
-  const {body:movie, params:{id}} = req
-  console.log(id)
-  moviesService.updateMovie({movie, id})
-  .then(id=>{
-    res.status(200).json({
-      message: "Movie updated",
-      id
+router.put('/:id', validationData(schemaIdMovie, "params"), 
+  validationData(updateMovieSchema),
+  (req,res,next)=>{
+    const {body:movie, params:{id}} = req
+    console.log(id)
+    moviesService.updateMovie({movie, id})
+    .then(id=>{
+      res.status(200).json({
+        message: "Movie updated",
+        id
+      })
     })
-  })
-  .catch(error=>{
-    next(error)
-  })
+    .catch(error=>{
+      next(error)
+    })
 })
 module.exports = router
 
-
-/* const fav = {
-  id: 'IDFAV',
-  userId: "Iduser", //con esta id → vamos a buscar
-  movies: [
-    {
-      id: ObjectId(id),
-    },
-    {
-      id: ObjectId(id),
-    },
-    {
-      id: ObjectId(id),
-    },
-    {
-      id: ObjectId(id),
-    },
-    {
-      id: ObjectId(id),
-    },
-    {
-      id: ObjectId(id),
-    }
-  ]
-} */
