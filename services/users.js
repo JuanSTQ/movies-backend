@@ -1,5 +1,5 @@
 const MongoLib = require("../lib/mongo")
-
+const bcrypt = require('bcrypt')
 
 class Users{
   constructor(){
@@ -14,8 +14,16 @@ class Users{
     const user = await this.mongoLib.get(this.collection, id)
     return user
   }
-  createUser({user}){
-    return this.mongoLib.create(this.collection, user)
+  async signUp({user}){
+    const format = {}
+    for(const prop in user){
+      if(prop!=="password"){
+        format[prop] = user[prop]
+      }
+    }
+    format.password = await bcrypt.hash(user.password, 10)
+    const userCreatedID = await this.mongoLib.create(this.collection, format)
+    return userCreatedID
   }
   deleteUser({id}){
     return this.mongoLib.delete(this.collection, id)
@@ -26,3 +34,5 @@ class Users{
 }
 
 module.exports = Users
+
+

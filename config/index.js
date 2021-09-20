@@ -8,5 +8,7 @@ const config = {
   dbPassword: process.env.DB_PASSWORD,
   dbName:process.env.DB_NAME,
   dbhost: process.env.DB_HOST,
+  defaultAdminPassword:process.env.DEFAULT_ADMIN_PASSWORD,
+  defaultUserPassword:process.env.DEFAULT_USER_PASSWORD
 }
 module.exports = config
