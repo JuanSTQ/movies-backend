@@ -12,7 +12,7 @@ router.get("/", (req,res,next)=>{
   .catch(error=>{next(error)})
 })
 router.get("/:id", validationData(schemaIdUser, "params"), (req,res,next)=>{
-  userService.getUser(req.params)
+  userService.getUserId(req.params)
   .then(data=>{
     res.status(200).json(data)
   })

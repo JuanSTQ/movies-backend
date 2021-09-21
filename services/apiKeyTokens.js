@@ -4,8 +4,8 @@ class ApiKeyToken{
     this.db = new MongoLib()
     this.collection ="api-token"
   }
-  async getApiKeyToken({token}){
-    const apitoken = await this.db.getAll(this.collection, {token})
+  async getApiKeyToken(token){
+    const apitoken = await this.db.getAll(this.collection, token)
     return apitoken[0]
   }
   async createApiKeyToken({apiKeyToken}){

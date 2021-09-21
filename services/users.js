@@ -10,7 +10,11 @@ class Users{
     const users = await this.mongoLib.getAll(this.collection,query);
     return users
   }
-  async getUser({id}){
+  async getUser({email}){
+    const [user] = await this.mongoLib.getAll(this.collection,{email});
+    return user
+  }
+  async getUserId({id}){
     const user = await this.mongoLib.get(this.collection, id)
     return user
   }

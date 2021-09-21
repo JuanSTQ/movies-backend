@@ -9,6 +9,9 @@ const config = {
   dbName:process.env.DB_NAME,
   dbhost: process.env.DB_HOST,
   defaultAdminPassword:process.env.DEFAULT_ADMIN_PASSWORD,
-  defaultUserPassword:process.env.DEFAULT_USER_PASSWORD
+  defaultUserPassword:process.env.DEFAULT_USER_PASSWORD,
+  authJwtSecret:process.env.AUTH_JWT_SECRET,
+  publicApiKeyToken:process.env.PUBLIC_API_KEY_TOKEN,
+  adminApiKeyToken:process.env.ADMIN_API_KEY_TOKEN,
 }
 module.exports = config
