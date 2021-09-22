@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const Movies = require('../services/movies');
+const scopeValidation = require('../utils/middlewares/scopesValidation');
 const validationData = require('../utils/middlewares/validationData');
 const { schemaIdMovie, schemaMovie, updateMovieSchema } = require('../utils/Schemas/movies');
 const router = express.Router();
@@ -26,7 +27,7 @@ router.get('/:id', validationData(schemaIdMovie, "params"), (req,res,next)=>{
     next(error)
   })
 })
-router.post('/', passport.authenticate('jwt', { session: false }), validationData(schemaMovie), (req,res,next)=>{
+router.post('/', passport.authenticate('jwt', { session: false }), scopeValidation("create:movies"), validationData(schemaMovie), (req,res,next)=>{
   console.log(req.user)
   const {body:movie} = req
   moviesService.createMovie({movie})
@@ -38,7 +39,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), validationDat
   })
 })
 
-router.delete('/:id',passport.authenticate('jwt', { session: false }) ,validationData(schemaIdMovie, "params"), (req,res,next)=>{
+router.delete('/:id', passport.authenticate('jwt', { session: false }), scopeValidation("delete:movies") ,validationData(schemaIdMovie, "params"), (req,res,next)=>{
   moviesService.deleteMovie(req.params)
   .then(id=>{
     res.status(200).json({
@@ -51,7 +52,7 @@ router.delete('/:id',passport.authenticate('jwt', { session: false }) ,validatio
   })
 })
 
-router.put('/:id', passport.authenticate('jwt', { session: false }),  validationData(schemaIdMovie, "params"), 
+router.put('/:id', passport.authenticate('jwt', { session: false }), scopeValidation("update:movies"),  validationData(schemaIdMovie, "params"), 
   validationData(updateMovieSchema),
   (req,res,next)=>{
     const {body:movie, params:{id}} = req

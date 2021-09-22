@@ -2,12 +2,13 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const UserMovies = require('../services/userMovies');
+const scopeValidation = require('../utils/middlewares/scopesValidation');
 const validationData = require('../utils/middlewares/validationData');
 const { userMovieIdSchema, createUserMovieSchema } = require('../utils/Schemas/userMovies');
 
 const userMoviesService = new UserMovies()
 require('../utils/strategies/jwt')
-router.get('/', passport.authenticate('jwt', { session: false }), (req,res,next)=>{
+router.get('/', passport.authenticate('jwt', { session: false }), scopeValidation("read:user-movies"), (req,res,next)=>{
   userMoviesService.getUserMovies(req.query)
   .then((data)=>{
     res.status(200).json(data)
@@ -16,7 +17,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req,res,next)
     next(error)
   })
 })
-router.get('/:id', passport.authenticate('jwt', { session: false }),  validationData(userMovieIdSchema,"params"),(req,res,next)=>{
+router.get('/:id', passport.authenticate('jwt', { session: false }), scopeValidation("read:user-movies"),  validationData(userMovieIdSchema,"params"),(req,res,next)=>{
   const {id} = req.params
   userMoviesService.getUserMovie({id})
   .then(movie=>{
@@ -26,7 +27,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }),  validation
     next(error)
   })
 })
-router.post('/',passport.authenticate('jwt', { session: false }) , validationData(createUserMovieSchema),(req,res,next)=>{
+router.post('/',passport.authenticate('jwt', { session: false }) ,scopeValidation("create:user-movies") ,validationData(createUserMovieSchema),(req,res,next)=>{
   const {body:userMovie} = req
   userMoviesService.createUserMovie({userMovie})
   .then(id=>{
@@ -40,7 +41,7 @@ router.post('/',passport.authenticate('jwt', { session: false }) , validationDat
   })
 })
 
-router.delete('/:id',passport.authenticate('jwt', { session: false }) ,validationData(userMovieIdSchema, "params"), (req,res,next)=>{
+router.delete('/:id',passport.authenticate('jwt', { session: false }), scopeValidation("delete:user-movies"), validationData(userMovieIdSchema, "params"), (req,res,next)=>{
   userMoviesService.deleteUserMovie(req.params)
   .then(id=>{
     res.status(200).json({
