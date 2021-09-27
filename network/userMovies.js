@@ -8,7 +8,11 @@ const { userMovieIdSchema, createUserMovieSchema } = require('../utils/Schemas/u
 
 const userMoviesService = new UserMovies()
 require('../utils/strategies/jwt')
-router.get('/', passport.authenticate('jwt', { session: false }), scopeValidation("read:user-movies"), (req,res,next)=>{
+router.get('/', (req,res,next)=>{
+  console.log(req.headers.authorization)
+  console.log(req.query)
+  next()
+} ,passport.authenticate('jwt', { session: false }), scopeValidation("read:user-movies"), (req,res,next)=>{
   userMoviesService.getUserMovies(req.query)
   .then((data)=>{
     res.status(200).json(data)
@@ -17,13 +21,15 @@ router.get('/', passport.authenticate('jwt', { session: false }), scopeValidatio
     next(error)
   })
 })
-router.get('/:id', passport.authenticate('jwt', { session: false }), scopeValidation("read:user-movies"),  validationData(userMovieIdSchema,"params"),(req,res,next)=>{
+router.get('/:id',  passport.authenticate('jwt', { session: false }), scopeValidation("read:user-movies"),  validationData(userMovieIdSchema,"params"),(req,res,next)=>{
   const {id} = req.params
   userMoviesService.getUserMovie({id})
   .then(movie=>{
+    console.log(movie)
     res.status(200).json(movie)
   })
   .catch(error=>{
+    console.log(error)
     next(error)
   })
 })

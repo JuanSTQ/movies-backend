@@ -25,8 +25,8 @@ router.post('/sign-up', validationData(schemaUser), (req,res,next)=>{
 })
 
 router.post('/sign-in', (req,res,next)=>{
-  const {body:token}= req
-  if(!token){
+  const {apiKeyToken}= req.body
+  if(!apiKeyToken){
     next(boom.unauthorized('ApiToken is required'))
   }
   passport.authenticate("basic", async (err, user)=>{
@@ -39,7 +39,7 @@ router.post('/sign-in', (req,res,next)=>{
           next(error)
         }
         const {_id:id, name, email} = user
-        const apiToken =  await tokenService.getApiKeyToken(token)
+        const apiToken =  await tokenService.getApiKeyToken({token: apiKeyToken})
         if(!apiToken){
           next(boom.unauthorized("Token Undefined"))
         }

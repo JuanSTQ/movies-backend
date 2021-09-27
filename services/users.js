@@ -26,6 +26,7 @@ class Users{
       }
     }
     format.password = await bcrypt.hash(user.password, 10)
+    delete user.password
     const userCreatedID = await this.mongoLib.create(this.collection, format)
     return userCreatedID
   }
