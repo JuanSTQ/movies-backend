@@ -41,7 +41,6 @@ router.delete("/:id", validationData(schemaIdUser, "params"), (req,res,next)=>{
 })
 router.put("/:id", validationData(schemaIdUser, "params") ,validationData(schemaUser),  (req,res,next)=>{
   const {body:user, params:{id}} = req
-  console.log(id)
   userService.updateUser({user, id})
   .then(id=>{
     res.status(200).json({

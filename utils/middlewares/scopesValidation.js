@@ -11,8 +11,6 @@ const scopeValidation = (permitsRoute)=>{
     if(!scopes.includes(permitsRoute)){
       next(boom.unauthorized('No tienes Permisos para hacer esta accion'))
     }
-    console.log(scopes)
-    console.log(permitsRoute)
     next()
   }
 }

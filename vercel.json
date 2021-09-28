@@ -1,0 +1,25 @@
+{
+  "name": "movies-benturi",
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.js"
+    }
+  ],
+  "env": {
+    "DB_USER": "@movie-user",
+    "DB_PASSWORD": "@movie-password",
+    "DB_HOST": "@movie-dbhost",
+    "DB_NAME": "@movie-dbname",
+    "AUTH_JWT_SECRET": "@movie-secret",
+    "PORT": "@movie-port",
+    "HOST": "@movie-host"
+  }
+}

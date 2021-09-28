@@ -11,16 +11,13 @@ passport.use( new JwtStrategy({
   secretOrKey: config.authJwtSecret,
 }, async (jwt_payload, done)=>{
   try {
-    console.log(jwt_payload, "TOKEN")
     const user = await userService.getUser({email:jwt_payload.email})  
     if(!user){
       return done(boom.unauthorized("Token Erroneo"), null)
     }
-    console.log('??')
     delete user.password
     done(null, {...user, scopes: jwt_payload.scopes})
   } catch (error) {
     done(error, null)
-    console.log("no token")
   }
 }))

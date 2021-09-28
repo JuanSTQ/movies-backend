@@ -28,7 +28,6 @@ router.get('/:id', validationData(schemaIdMovie, "params"), (req,res,next)=>{
   })
 })
 router.post('/', passport.authenticate('jwt', { session: false }), scopeValidation("create:movies"), validationData(schemaMovie), (req,res,next)=>{
-  console.log(req.user)
   const {body:movie} = req
   moviesService.createMovie({movie})
   .then(id=>{
@@ -56,7 +55,6 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), scopeValida
   validationData(updateMovieSchema),
   (req,res,next)=>{
     const {body:movie, params:{id}} = req
-    console.log(id)
     moviesService.updateMovie({movie, id})
     .then(id=>{
       res.status(200).json({
