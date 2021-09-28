@@ -49,7 +49,7 @@ router.post('/sign-in', (req,res,next)=>{
           email: email, 
           scopes: apiToken.scopes,
         }
-        const jwtToken = jwt.sign(payload, config.authJwtSecret, {expiresIn:'15m'})
+        const jwtToken = jwt.sign(payload, config.authJwtSecret)
         res.cookie('cookie', jwtToken)
         res.status(200).json({token:jwtToken, user:{id, name, email}})
       })
